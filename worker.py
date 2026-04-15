@@ -50,6 +50,7 @@ class Worker:
                 s=''
                 continue     
             s += c
+        return request_line
 
 
     def recv_headers(self):
@@ -82,3 +83,4 @@ class Worker:
                 key += c
             elif state == 'val':
                 val += c
+        return headers
