@@ -1,12 +1,24 @@
+import os
+
 class Handler:
 
     def __init__(self):
-        self.routes = {
-            ("GET", "/index.html"): (self.serve_file, "files/index.html"),
-            ("GET", "/contacts.html"): (self.serve_file, "files/contacts.html"),
-            ("GET", "/favicon.ico"): (self.serve_file, "files/favicon.ico"),
-            ("GET", "/careers.html"): (self.serve_file, "files/careers.html")
-        }
+        self.routes = {}
+        self.build_routes()
+
+    def traverse(self, path):
+        s = []
+        for p in os.listdir(path):
+            if '.' not in p:
+                for x in self.traverse(f"{path}/{p}"):
+                    s.append(x)
+            else:
+                s.append(f"{path}/{p}")
+        return s
+    
+    def build_routes(self):
+        for path in self.traverse("./public"):
+            self.routes[("GET", path[8:])] = (self.serve_file, path)
 
     def handle(self, route):
         try:

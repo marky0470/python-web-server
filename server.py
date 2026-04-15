@@ -3,12 +3,14 @@ import socket
 from util.threaded import threaded
 from worker import Worker
 from event import Event
+from handler import Handler
 
 class Server:
 
     def __init__(self):
         self.id = 0
         self.workers = []
+        self.handler = Handler()
         self.event = Event()
         self.event.register_event("on_worker_end")
         self.event.register_callback("on_worker_end", self.kill_worker)
@@ -24,7 +26,7 @@ class Server:
             conn, addr = sock.accept()
             print("New connection:", addr)
             print("# of Workers before append", len(self.workers))
-            worker = Worker(conn, self.id, self.event)
+            worker = Worker(conn, self.id, self.event, self.handler)
             self.id += 1
             self.workers.append(worker)
             
