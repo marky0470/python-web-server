@@ -41,6 +41,7 @@ class Worker:
             c = self.conn.recv(1).decode()
             if c == '':
                 self.event.trigger("on_worker_end", self)
+                return
             if c == '\r':
                 self.conn.recv(1)
                 request_line.append(s)
